@@ -5,6 +5,10 @@ A simple sports app that allows users to:
 2. **View Teams** - Browse teams within a selected league
 3. **Team Details** - View detailed information about a team
 
+
+https://github.com/user-attachments/assets/c2d8605f-038d-4ba6-a172-44136bd35f54
+
+
 ### Setup Instructions
 
 #### Prerequisites
