@@ -34,6 +34,7 @@ Specifically, I leveraged AI to:
 * Validate feature-based modularization for my application, ensuring clean boundaries between feature modules and shared core layers (domain, data, navigation).
 * Refine MVVM + Flow usage, including best practices around StateFlow, SharedFlow, and one-off navigation events.
 * Design type-safe navigation with Jetpack Navigation, focusing on where navigation events should live (ViewModel vs UI) and how to safely pop the back stack without leaking UI concerns.
+* Write Compose Previews quickly and effectively.
 
 All final architectural decisions and implementations were made deliberately, with AI acting as a second set of eyes.
 
