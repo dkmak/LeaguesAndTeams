@@ -20,12 +20,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.core.common.ui.compose.LeaguesAndTeamsAppBar
+import com.core.common.ui.theme.LeaguesAndTeamsTheme
 import com.core.model.TeamDetails
 import com.core.navigation.NavigationAction
 
@@ -43,12 +45,25 @@ fun TeamDetailsScreen(
         }
     }
 
+    TeamDetailsScreen(
+      uiState = uiState,
+      scrollState = scrollState,
+      onBackClicked = {teamDetailsViewModel.onBackClicked()}
+    )
+}
+
+@Composable
+fun TeamDetailsScreen(
+    uiState: TeamDetailsUiState,
+    scrollState: ScrollState,
+    onBackClicked: () -> Unit
+){
     Scaffold(
         topBar = {
             LeaguesAndTeamsAppBar(
                 title = "Team Details",
                 showBackButton = true,
-                onBackClicked = { teamDetailsViewModel.onBackClicked() }
+                onBackClicked = onBackClicked
             )
         }
     ) { innerPadding ->
@@ -140,5 +155,52 @@ fun DisplayTeamDetails(
                 textAlign = TextAlign.Center
             )
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun TeamDetailsScreenSuccessPreview() {
+    LeaguesAndTeamsTheme {
+        TeamDetailsScreen(
+            uiState = TeamDetailsUiState.Success(
+                teamDetails = TeamDetails(
+                    idTeam = "133604",
+                    strTeam = "Arsenal",
+                    strLocation = "London, England",
+                    strStadium = "Emirates Stadium",
+                    strDescription = "Arsenal Football Club is a professional football club based in London.",
+                    badgeUrl = null
+                )
+            ),
+            scrollState = rememberScrollState(),
+            onBackClicked = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun TeamDetailsScreenFailurePreview() {
+    LeaguesAndTeamsTheme {
+        TeamDetailsScreen(
+            uiState = TeamDetailsUiState.Failure(
+                message = "An Unknown Error Occurred"
+            ),
+            scrollState = rememberScrollState(),
+            onBackClicked = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun TeamDetailsScreenLoadingPreview() {
+    LeaguesAndTeamsTheme {
+        TeamDetailsScreen(
+            uiState = TeamDetailsUiState.Loading,
+            scrollState = rememberScrollState(),
+            onBackClicked = {}
+        )
     }
 }

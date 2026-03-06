@@ -24,10 +24,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.core.common.ui.compose.LeaguesAndTeamsAppBar
+import com.core.common.ui.theme.LeaguesAndTeamsTheme
 import com.core.model.Team
 import com.core.navigation.NavigationAction
 
@@ -44,12 +46,29 @@ fun TeamsScreen(
             onNavigate(navAction)
         }
     }
+
+    TeamsScreen(
+        uiState = uiState,
+        listState = listState,
+        onTeamClicked = { team -> teamsViewModel.onTeamClicked(team) },
+        onBackClicked = {teamsViewModel.onBackClicked()}
+    )
+
+}
+
+@Composable
+fun TeamsScreen(
+    uiState: TeamsUiState,
+    listState: LazyListState,
+    onTeamClicked: (String) -> Unit,
+    onBackClicked: () -> Unit
+){
     Scaffold(
         topBar = {
             LeaguesAndTeamsAppBar(
                 title = "Teams",
                 showBackButton = true,
-                onBackClicked = { teamsViewModel.onBackClicked() }
+                onBackClicked = onBackClicked
             )
         },
         modifier = Modifier.fillMaxSize()
@@ -86,7 +105,7 @@ fun TeamsScreen(
                     DisplayTeamsList(
                         teams = state.teams,
                         listState = listState,
-                        onTeamClicked = { team -> teamsViewModel.onTeamClicked(team) },
+                        onTeamClicked = onTeamClicked,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(8.dp)
@@ -153,5 +172,52 @@ fun DisplayTeamItem(
                 )
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun TeamsScreenSuccessPreview() {
+    LeaguesAndTeamsTheme {
+        TeamsScreen(
+            uiState = TeamsUiState.Success(
+                teams = listOf(
+                    Team(idTeam = "133604", strTeam = "Arsenal"),
+                    Team(idTeam = "133602", strTeam = "Chelsea"),
+                    Team(idTeam = "133610", strTeam = "Liverpool")
+                )
+            ),
+            listState = rememberLazyListState(),
+            onTeamClicked = {},
+            onBackClicked = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun TeamsScreenFailurePreview() {
+    LeaguesAndTeamsTheme {
+        TeamsScreen(
+            uiState = TeamsUiState.Failure(
+                message = "An Unknown Error Occurred"
+            ),
+            listState = rememberLazyListState(),
+            onTeamClicked = {},
+            onBackClicked = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun TeamsScreenLoadingPreview() {
+    LeaguesAndTeamsTheme {
+        TeamsScreen(
+            uiState = TeamsUiState.Loading,
+            listState = rememberLazyListState(),
+            onTeamClicked = {},
+            onBackClicked = {}
+        )
     }
 }

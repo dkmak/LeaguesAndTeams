@@ -25,10 +25,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.core.common.ui.compose.LeaguesAndTeamsAppBar
+import com.core.common.ui.theme.LeaguesAndTeamsTheme
 import com.core.model.League
 import com.core.navigation.NavigationAction
 
@@ -47,6 +49,19 @@ fun LeaguesScreen(
         }
     }
 
+    LeaguesScreen(
+        uiState = uiState,
+        listState = listState,
+        onLeagueClicked = {league -> leaguesViewModel.onLeagueClicked(league)}
+    )
+}
+
+@Composable
+fun LeaguesScreen(
+    uiState: LeaguesUiState,
+    listState: LazyListState,
+    onLeagueClicked: (String)-> Unit
+){
     Scaffold(
         topBar = {
             LeaguesAndTeamsAppBar(
@@ -87,7 +102,7 @@ fun LeaguesScreen(
                     DisplayLeagueList(
                         leagues = state.leagues,
                         listState = listState,
-                        onLeagueClicked = { league -> leaguesViewModel.onLeagueClicked(league) },
+                        onLeagueClicked = onLeagueClicked,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(8.dp)
@@ -96,6 +111,7 @@ fun LeaguesScreen(
             }
         }
     }
+
 }
 
 @Composable
@@ -154,5 +170,65 @@ fun DisplayLeagueItem(
                 )
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DisplayLeagueListPreview() {
+    LeaguesAndTeamsTheme {
+        DisplayLeagueList(
+            leagues = listOf(
+                League(idLeague = "4328", strLeague = "English Premier League"),
+                League(idLeague = "4329", strLeague = "English Championship"),
+                League(idLeague = "4330", strLeague = "Scottish Premiership")
+            ),
+            listState = rememberLazyListState(),
+            onLeagueClicked = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun LeaguesScreenPreview() {
+    LeaguesAndTeamsTheme {
+        LeaguesScreen(
+            uiState = LeaguesUiState.Success(
+                leagues = listOf(
+                    League(idLeague = "4328", strLeague = "English Premier League"),
+                    League(idLeague = "4329", strLeague = "English Championship"),
+                    League(idLeague = "4330", strLeague = "Scottish Premiership")
+                )
+            ),
+            listState = rememberLazyListState(),
+            onLeagueClicked = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun LeaguesScreenFailurePreview() {
+    LeaguesAndTeamsTheme {
+        LeaguesScreen(
+            uiState = LeaguesUiState.Failure(
+                message = "An Unknown Error Occurred"
+            ),
+            listState = rememberLazyListState(),
+            onLeagueClicked = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun LeaguesScreenLoadingPreview() {
+    LeaguesAndTeamsTheme {
+        LeaguesScreen(
+            uiState = LeaguesUiState.Loading,
+            listState = rememberLazyListState(),
+            onLeagueClicked = {}
+        )
     }
 }
