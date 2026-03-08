@@ -1,5 +1,3 @@
-import org.gradle.kotlin.dsl.implementation
-
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
@@ -35,7 +33,6 @@ dependencies {
     implementation(libs.retrofit)
 
     implementation(libs.androidx.core)
-    testImplementation(libs.junit)
 
     // dependency injection
     implementation(libs.hilt.android)
