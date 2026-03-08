@@ -7,6 +7,9 @@ import com.core.domain.repository.SportsRepository
 import com.core.model.League
 import com.core.model.Team
 import com.core.model.TeamDetails
+import com.core.network.dto.LeagueDto
+import com.core.network.dto.TeamDetailsDto
+import com.core.network.dto.TeamDto
 import com.core.network.service.SportsApiClient
 import com.core.network.responses.LeaguesResponse
 import com.core.network.responses.TeamDetailsResponse
@@ -32,22 +35,28 @@ class SportsRepositoryTest {
     @Test
     fun `getLeagues is successful when client returns data`() = runTest {
         val leagues = listOf(
-            League(idLeague = "1", strLeague = "League 1"),
-            League(idLeague = "2", strLeague = "League 2"),
+            LeagueDto(idLeague = "1", strLeague = "League 1"),
+            LeagueDto(idLeague = "2", strLeague = "League 2"),
         )
 
         fakeApiService.leaguesBehavior = Behavior.Success(LeaguesResponse(leagues = leagues))
 
         repository.getLeagues().test {
             val result = awaitItem()
-            assertEquals(leagues, result)
+            assertEquals(
+                listOf(
+                    League(idLeague = "1", strLeague = "League 1"),
+                    League(idLeague = "2", strLeague = "League 2"),
+                ),
+                result
+            )
             awaitComplete()
         }
     }
 
     @Test
     fun `getLeagues throws EmptyResult error when client returns empty list`() = runTest {
-        val leagues = emptyList<League>()
+        val leagues = emptyList<LeagueDto>()
 
         fakeApiService.leaguesBehavior =
             Behavior.Success(LeaguesResponse(leagues = leagues))
@@ -74,22 +83,28 @@ class SportsRepositoryTest {
     @Test
     fun `getTeams emits success when client returns data`() = runTest {
         val teams = listOf(
-            Team(idTeam = "1", strTeam = "Team 1"),
-            Team(idTeam = "2", strTeam = "Team 2"),
+            TeamDto(idTeam = "1", strTeam = "Team 1"),
+            TeamDto(idTeam = "2", strTeam = "Team 2"),
         )
 
         fakeApiService.teamsBehavior = Behavior.Success(TeamsResponse(teams = teams))
 
         repository.getTeams("").test {
             val result = awaitItem()
-            assertEquals(teams, result)
+            assertEquals(
+                listOf(
+                    Team(idTeam = "1", strTeam = "Team 1"),
+                    Team(idTeam = "2", strTeam = "Team 2"),
+                ),
+                result
+            )
             awaitComplete()
         }
     }
 
     @Test
     fun `getTeams throws EmptyResult when client returns empty list`() = runTest {
-        val teams = emptyList<Team>()
+        val teams = emptyList<TeamDto>()
 
         fakeApiService.teamsBehavior = Behavior.Success(TeamsResponse(teams = teams))
 
@@ -114,12 +129,12 @@ class SportsRepositoryTest {
     @Test
     fun `getTeamDetails emits success when client returns data`() = runTest {
         val teams = listOf(
-            TeamDetails(
+            TeamDetailsDto(
                 idTeam = "1", strTeam = "Team 1",
                 strLocation = null,
                 strStadium = null,
                 strDescription = null,
-                badgeUrl = null
+                strBadge = null
             ),
         )
 
@@ -127,14 +142,24 @@ class SportsRepositoryTest {
 
         repository.getTeamDetails("").test {
             val result = awaitItem()
-            assertEquals(teams.first(), result)
+            assertEquals(
+                TeamDetails(
+                    idTeam = "1",
+                    strTeam = "Team 1",
+                    strLocation = null,
+                    strStadium = null,
+                    strDescription = null,
+                    badgeUrl = null
+                ),
+                result
+            )
             awaitComplete()
         }
     }
 
     @Test
     fun `getTeamDetails throws EmptyResult when client return empty list`() = runTest {
-        val teamDetails = emptyList<TeamDetails>()
+        val teamDetails = emptyList<TeamDetailsDto>()
 
         fakeApiService.teamDetailsBehavior = Behavior.Success(TeamDetailsResponse(teamDetails))
 

@@ -1,6 +1,7 @@
 package com.core.data.repository
 
 import com.core.data.error.toSportsError
+import com.core.data.mapper.toDomain
 import com.core.domain.error.SportsError
 import com.core.domain.repository.SportsRepository
 import com.core.model.League
@@ -17,7 +18,7 @@ internal class SportsRepositoryImpl @Inject constructor(
 ) : SportsRepository {
     override fun getLeagues(): Flow<List<League>> = flow {
         val response = sportsApiClient.getLeaguesList()
-        val leagues = response.leagues ?: throw SportsError.EmptyResult
+        val leagues = response.leagues?.map { it.toDomain() } ?: throw SportsError.EmptyResult
         if (leagues.isEmpty()) {
             throw SportsError.EmptyResult
         }
@@ -29,7 +30,7 @@ internal class SportsRepositoryImpl @Inject constructor(
 
     override fun getTeams(league: String): Flow<List<Team>> = flow {
         val response = sportsApiClient.getTeamsList(league)
-        val teams = response.teams?: throw SportsError.EmptyResult
+        val teams = response.teams?.map { it.toDomain() } ?: throw SportsError.EmptyResult
         if (teams.isEmpty()) {
             throw SportsError.EmptyResult
         }
@@ -41,7 +42,7 @@ internal class SportsRepositoryImpl @Inject constructor(
 
     override fun getTeamDetails(teamQuery: String): Flow<TeamDetails>  = flow {
         val response = sportsApiClient.getTeamDetails(teamQuery)
-        val teams = response.teams?: throw SportsError.EmptyResult
+        val teams = response.teams?.map { it.toDomain() } ?: throw SportsError.EmptyResult
         if (teams.isEmpty()) {
             throw SportsError.EmptyResult
         }
