@@ -1,9 +1,9 @@
 package com.core.network.responses
 
-import com.core.model.Team
+import com.core.network.dto.TeamDto
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class TeamsResponse (
-    val teams: List<Team>?
+    val teams: List<TeamDto>?
 )

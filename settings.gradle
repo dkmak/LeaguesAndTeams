@@ -14,11 +14,9 @@ dependencyResolutionManagement {
 }
 rootProject.name = "LeaguesAndTeamsApp"
 include ':app'
-include ':core'
 include ':core:network'
 include ':core:model'
 include ':core:data'
-include ':feature'
 include ':core:common-ui'
 include ':feature:leagues'
 include ':core:navigation'
