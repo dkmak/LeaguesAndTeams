@@ -1,41 +1,14 @@
 plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.hilt.plugin)
-    alias(libs.plugins.ksp)
-
+    kotlin("jvm")
+    `java-library`
 }
 
-android {
-    namespace = "com.core.domain"
-    compileSdk = 36
-
-    defaultConfig {
-        minSdk = 24
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    }
-
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-        }
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-
-    }
-
-    kotlinOptions {
-        jvmTarget = "17"
-    }
+kotlin {
+    jvmToolchain(17)
 }
 
 dependencies {
     api(project(":core:model"))
-
-    // dependency injection
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.compiler)
-    kspAndroidTest(libs.hilt.compiler)
+    api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
+    implementation("javax.inject:javax.inject:1")
 }
